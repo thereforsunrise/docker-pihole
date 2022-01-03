@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  nginx:
+    image:  pihole/pihole:latest
+    container_name: pihole
+    # https://hub.docker.com/r/pihole/pihole
+    environment:
+      TZ: 'Europe/London'
+      WEBPASSWORD: $WEBPASSWORD
+    volumes:
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          ip_range: 172.28.5.0/24
